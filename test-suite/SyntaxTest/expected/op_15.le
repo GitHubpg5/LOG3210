@@ -1,0 +1,10 @@
+  Program
+   AssignStmt
+    Identifier
+    Logic
+     IntValue
+     Compare
+      Identifier
+      Addition
+       Identifier
+       Identifier

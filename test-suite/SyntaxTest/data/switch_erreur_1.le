@@ -1,0 +1,5 @@
+// Extra comma
+
+enum MyEnum {
+    A, B, C,
+}

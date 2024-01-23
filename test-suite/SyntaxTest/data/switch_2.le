@@ -1,0 +1,11 @@
+// Switch-case without default or break statement
+enum MyEnum {
+    A, B, C
+}
+
+switch(myEnum){
+    case A:
+        a = 1;
+    case B:
+        a = 2;
+}

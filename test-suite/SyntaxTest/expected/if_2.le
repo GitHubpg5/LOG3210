@@ -1,0 +1,11 @@
+  Program
+   IfStmt
+    IfCond
+     IntValue
+    IfBlock
+     AssignStmt
+      Identifier
+      IntValue
+     AssignStmt
+      Identifier
+      IntValue

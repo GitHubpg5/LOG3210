@@ -1,0 +1,6 @@
+// Switch-case with no blocks
+switch(myValue){
+    case 1:
+    case 2:
+    default:
+}

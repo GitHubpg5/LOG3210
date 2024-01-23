@@ -1,0 +1,7 @@
+  Program
+   AssignStmt
+    Identifier
+    Compare
+     IntValue
+     IntValue
+     IntValue

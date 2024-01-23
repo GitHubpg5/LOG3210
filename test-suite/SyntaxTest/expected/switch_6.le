@@ -1,0 +1,17 @@
+  Program
+   SwitchStmt
+    Identifier
+    CaseStmt
+     IntValue
+     CaseBlock
+      AssignStmt
+       Identifier
+       IntValue
+      BreakStmt
+    CaseStmt
+     IntValue
+     CaseBlock
+      AssignStmt
+       Identifier
+       IntValue
+      BreakStmt

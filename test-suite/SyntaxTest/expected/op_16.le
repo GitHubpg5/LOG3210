@@ -1,0 +1,8 @@
+  Program
+   AssignStmt
+    Identifier
+    Not
+     Not
+      Not
+       Not
+        Identifier

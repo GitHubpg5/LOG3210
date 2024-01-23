@@ -1,0 +1,9 @@
+// Switch-case with integer value as case label
+switch(myValue){
+    case 1:
+        a = 1;
+        break;
+    case 2:
+        a = 2;
+        break;
+}

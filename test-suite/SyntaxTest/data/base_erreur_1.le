@@ -1,0 +1,5 @@
+// Error test for statements
+
+// Missing semicolon
+allo = 12
+

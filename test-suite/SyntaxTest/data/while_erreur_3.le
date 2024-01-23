@@ -1,0 +1,6 @@
+// Error test for do-while statement
+
+// Missing semicolon
+do {
+    a=0;
+} while (a==1)

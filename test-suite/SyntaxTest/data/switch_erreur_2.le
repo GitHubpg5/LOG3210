@@ -1,0 +1,4 @@
+// Arithmetic expression as case label
+
+switch(myValue){
+}

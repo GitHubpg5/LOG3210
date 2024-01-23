@@ -1,0 +1,30 @@
+// Combining all the tests
+
+enum MyEnum {
+    A, B, C
+}
+
+myEnum = C;
+a = 0;
+b = 0;
+c = 0;
+myList = [a, b, c];
+
+switch(myEnum){
+    case A:
+        if(b > 0)
+            a = 1;
+        else
+            a = b;
+        break;
+    case B:
+        for(i = 0; i > 0; i = i + 1)
+            a = a + i;
+    default:
+}
+
+while (a + b > 0)
+{
+    c = c + a / b;
+    a = a * 0.5;
+}

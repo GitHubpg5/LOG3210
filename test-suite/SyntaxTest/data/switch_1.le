@@ -1,0 +1,13 @@
+// Enum
+
+enum MyEnum {
+    A, B, C
+}
+
+enum MyOtherEnum {
+    D, E
+}
+
+enum YetAnotherEnum {
+    F
+}

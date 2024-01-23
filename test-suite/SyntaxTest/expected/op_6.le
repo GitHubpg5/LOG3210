@@ -1,0 +1,7 @@
+  Program
+   AssignStmt
+    Identifier
+    Multi
+     IntValue
+     Minus
+      IntValue

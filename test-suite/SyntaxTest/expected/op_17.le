@@ -1,0 +1,7 @@
+  Program
+   AssignStmt
+    Identifier
+    Minus
+     Minus
+      Minus
+       Identifier

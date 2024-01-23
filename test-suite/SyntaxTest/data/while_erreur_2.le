@@ -1,0 +1,6 @@
+// Error test for switch statement
+
+// Missing parenthesis
+while i == 0 {
+    a = a + 1;
+}
