@@ -185,7 +185,9 @@ void DoWhileStmt() : {}
 
 void IfStmt() : {}
 {
-   <IF> <LPAREN> Expr() #IfCond <RPAREN> (Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC>))
+    <IF> <LPAREN> Expr() #IfCond <RPAREN> (Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC>))
+    (LOOKAHEAD(1) <ELSE> (Stmt() #ElseBlock | (<LACC> Block() #ElseBlock <RACC> )))?
+   //<IF> <LPAREN> Expr() #IfCond <RPAREN> (Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC>))
         //( <ELSE> (IfStmt() #ElseBlock |( <LACC> Block() #ElseBlock <RACC> )))?
 }
     //<IF> <LPAREN> Expr() #IfCond <RPAREN>(Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC> )) (<ELSE> (Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC> )))?}
