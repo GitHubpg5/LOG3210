@@ -162,7 +162,7 @@ void Block() #void : {}
 
 void Stmt() #void : {}
 {
-	AssignStmt() <SEMICOLON>
+	AssignStmt() <SEMICOLON> | WhileStmt() | DoWhileStmt() | IfStmt()
 }
 
 void AssignStmt() : {}
@@ -172,7 +172,25 @@ void AssignStmt() : {}
 
 // TODO: Ajouter tous vos statements ici (Voir énoncé)
 
+void WhileStmt() : {}
+{
+    <WHILE> <LPAREN> Expr() #WhileCond <RPAREN> ((<LACC> Block() #WhileBlock <RACC>) | Stmt() #WhileBlock )
+}
+// While -> Expr(Block() | Stmt())
 
+void DoWhileStmt() : {}
+{
+    <DO> <LACC> Block() #WhileBlock <RACC> <WHILE> <LPAREN> Expr() #WhileCond <RPAREN> <SEMICOLON>
+}
+
+void IfStmt() : {}
+{
+    <IF> <LPAREN> Expr() #IfCond <RPAREN> (Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC>))
+     ( <ELSE> (IfStmt() #ElseBlock |( <LACC> Block() #ElseBlock <RACC> )))?
+     }
+    //<IF> <LPAREN> Expr() #IfCond <RPAREN>(Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC> )) (<ELSE> (Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC> )))?}
+    <IF> <LPAREN> Expr() #IfCond <RPAREN>(Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC> )) (<ELSE>)
+    //<IF> <LPAREN> Expr() #IfCond <RPAREN> Stmt() #IfBlock
 
 // ---------- STATEMENTS END ----------
 
@@ -180,7 +198,7 @@ void AssignStmt() : {}
 
 void Expr() #void : {}
 {
-    BasicExpr()
+    BasicExpr() | ArrayExpr()
 }
 
 void BasicExpr() #void : {}
@@ -191,8 +209,10 @@ void BasicExpr() #void : {}
 
 // TODO: Ajouter tous vos expressions ici (Voir énoncé)
 
-
-
+void ArrayExpr() : {}
+{
+    <LBRA> (Expr() (<COMMA> Expr())* )? <RBRA>
+}
 
 // Expressions de base (Ne pas modifier):
 
