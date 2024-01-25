@@ -126,7 +126,8 @@ TOKEN :
 	< SEMICOLON: ";" > |
 	< COMMA: "," > |
 	< #AND: "&&" > |
-	< #OR: "||" >
+	< #OR: "||" > |
+	< PERIOD: "." >
 	// À compléter au besoin
 }
 
@@ -138,7 +139,8 @@ TOKEN :
 	< #LETTER: ["a"-"z","A"-"Z","_"] > |
 	< #DIGIT: ["0"-"9"] > |
 	< INTEGER: ["1"-"9"] (["0"-"9"])* | "0" > |
-	< REAL: (<INTEGER>) > //TODO
+	< REAL: (<INTEGER>)* <PERIOD> (<INTEGER>)* (("e" | "E") (<PLUS>)? <INTEGER> )? >
+	//TODO // la priorité des operations va m'offrir un minus so on s'en caliss
 }
 
 
@@ -213,7 +215,7 @@ void Expr() #void : {}
 void BasicExpr() #void : {}
 {
 	LOOKAHEAD(2) Identifier() |
-	IntValue()
+	IntValue() | RealValue()
 }
 
 // TODO: Ajouter tous vos expressions ici (Voir énoncé)
