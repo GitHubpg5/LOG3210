@@ -127,8 +127,10 @@ TOKEN :
 	< COMMA: "," > |
 	< #AND: "&&" > |
 	< #OR: "||" > |
-	< PERIOD: "." >
 	// À compléter au besoin
+	< PERIOD: "." > |
+	< ENUM: "enum" > |
+	< BREAK: "break" >
 }
 
 
@@ -164,7 +166,7 @@ void Block() #void : {}
 
 void Stmt() #void : {}
 {
-	AssignStmt() <SEMICOLON> | WhileStmt() | DoWhileStmt() | IfStmt() | ForStmt()
+	AssignStmt() <SEMICOLON> | WhileStmt() | DoWhileStmt() | IfStmt() | ForStmt() | EnumStmt() | SwitchStmt()
 }
 
 void AssignStmt() : {}
@@ -178,7 +180,6 @@ void WhileStmt() : {}
 {
     <WHILE> <LPAREN> Expr() #WhileCond <RPAREN> ((<LACC> Block() #WhileBlock <RACC>) | Stmt() #WhileBlock )
 }
-// While -> Expr(Block() | Stmt())
 
 void DoWhileStmt() : {}
 {
@@ -189,19 +190,26 @@ void IfStmt() : {}
 {
     <IF> <LPAREN> Expr() #IfCond <RPAREN> (Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC>))
     (LOOKAHEAD(1) <ELSE> (Stmt() #ElseBlock | (<LACC> Block() #ElseBlock <RACC> )))?
-   //<IF> <LPAREN> Expr() #IfCond <RPAREN> (Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC>))
-        //( <ELSE> (IfStmt() #ElseBlock |( <LACC> Block() #ElseBlock <RACC> )))?
 }
-    //<IF> <LPAREN> Expr() #IfCond <RPAREN>(Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC> )) (<ELSE> (Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC> )))?}
-    //<IF> <LPAREN> Expr() #IfCond <RPAREN>(Stmt() #IfBlock | (<LACC> Block() #IfBlock <RACC> )) (<ELSE>)
-    //<IF> <LPAREN> Expr() #IfCond <RPAREN> Stmt() #IfBlock
-
 
 void ForStmt() : {}
 {
     <FOR> <LPAREN> (AssignStmt())? <SEMICOLON> (Expr())? <SEMICOLON> (AssignStmt())? <RPAREN>
     (<LACC> Block() <RACC> | Stmt())
 }
+
+void EnumStmt() : {}
+{
+   <ENUM> Identifier() <LACC> (Expr() (<COMMA> Expr())* )? <RACC>
+}
+
+void SwitchStmt() : {}
+{
+    <SWITCH> <LPAREN> Identifier() <RPAREN> <LACC> (((<CASE> (Identifier()|IntValue()) <COLON> (Block() ( <BREAK> #BreakStmt <SEMICOLON>)?) #CaseBlock) #CaseStmt |(<DEF> <COLON> (Block() ( <BREAK> #BreakStmt <SEMICOLON>)?) #CaseBlock) #DefaultStmt ))+
+     <RACC>
+
+}
+
 
 // ---------- STATEMENTS END ----------
 
