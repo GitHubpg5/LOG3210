@@ -217,7 +217,7 @@ void SwitchStmt() : {}
 
 void Expr() #void : {}
 {
-    BasicExpr() | ArrayExpr()
+    LogicExpr() | ArrayExpr()
 }
 
 void BasicExpr() #void : {}
@@ -231,6 +231,31 @@ void BasicExpr() #void : {}
 void ArrayExpr() : {}
 {
     <LBRA> (Expr() (<COMMA> Expr())* )? <RBRA>
+}
+
+void LogicExpr() #Logic(>1): {}
+{
+    CompareExpr() ( <LOGIC> CompareExpr() )*
+}
+
+void CompareExpr() #Compare(>1): {}
+{
+    AddExpr() ( <COMPARE> AddExpr() )*
+}
+
+void AddExpr() #Addition(>1): {}
+{
+    MultExpr() ( <PLUS> MultExpr() | <MINUS> MultExpr() )*
+}
+
+void MultExpr() #Multi(>1): {}
+{
+    ParenExpr() ( <FOIS> ParenExpr() | <DIV> ParenExpr() )*
+}
+
+void ParenExpr() #Paren(>1) : {}
+{
+    BasicExpr() | <LPAREN> Expr() <RPAREN>
 }
 
 // Expressions de base (Ne pas modifier):
