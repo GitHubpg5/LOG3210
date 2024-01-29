@@ -244,12 +244,22 @@ void CompareExpr() #Compare(>1): {}
 
 void AddExpr() #Addition(>1): {}
 {
-    MultExpr() ( <PLUS> MultExpr() | <MINUS> MultExpr() )*
+    MultExpr() ( LOOKAHEAD(2) <PLUS> MultExpr() | <MINUS> MultExpr() )*
 }
 
 void MultExpr() #Multi(>1): {}
 {
-    ParenExpr() ( <FOIS> ParenExpr() | <DIV> ParenExpr() )*
+    NegExpr() ( <FOIS> NegExpr() | <DIV> NegExpr() )*
+}
+
+void NegExpr() #Minus(>1): {}
+{
+    NotExpr() | <MINUS> NegExpr() #Minus
+}
+
+void NotExpr() #Not(>1): {}
+{
+    ParenExpr() | <NOT> NotExpr() #Not
 }
 
 void ParenExpr() #Paren(>1) : {}
