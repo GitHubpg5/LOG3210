@@ -1,0 +1,9 @@
+  Program
+   AssignStmt
+    Identifier
+    ArrayExpr
+     ArrayExpr
+      IntValue
+      IntValue
+     Identifier
+     Identifier

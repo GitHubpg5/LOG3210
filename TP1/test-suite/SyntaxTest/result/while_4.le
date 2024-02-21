@@ -1,0 +1,11 @@
+  Program
+   DoWhileStmt
+    WhileBlock
+     AssignStmt
+      Identifier
+      IntValue
+     AssignStmt
+      Identifier
+      IntValue
+    WhileCond
+     IntValue

@@ -1,0 +1,12 @@
+  Program
+   ForStmt
+    AssignStmt
+     Identifier
+     IntValue
+    IntValue
+    AssignStmt
+     Identifier
+     Identifier
+    AssignStmt
+     Identifier
+     IntValue
