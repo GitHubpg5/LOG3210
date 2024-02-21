@@ -6,6 +6,7 @@ import analyzer.ast.*;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * Created: 19-01-10
@@ -86,7 +87,19 @@ public class SemantiqueVisitor implements ParserVisitor {
     @Override
     public Object visit(ASTDeclaration node, Object data) {
         String varName = ((ASTIdentifier) node.jjtGetChild(0)).getValue();
+        System.out.println(node.getValue());
         // TODO
+        if (SymbolTable.containsKey(varName)){
+            throw new SemantiqueError(String.format("Identifier %s has multiple declarations", varName));
+        }
+        if (Objects.equals(node.getValue(), "bool")){
+            SymbolTable.put(varName, VarType.Bool);
+        }
+        else if (Objects.equals(node.getValue(), "num")){
+            SymbolTable.put(varName, VarType.Number);
+        }
+        else throw new SemantiqueError("Invalid use of undefined Identifier " + node.getValue());
+        this.VAR++;
         return null;
     }
 
