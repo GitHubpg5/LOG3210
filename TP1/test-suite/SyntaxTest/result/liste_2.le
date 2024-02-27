@@ -1,8 +1,0 @@
-  Program
-   AssignStmt
-    Identifier
-    ArrayExpr
-   AssignStmt
-    Identifier
-    ArrayExpr
-     ArrayExpr

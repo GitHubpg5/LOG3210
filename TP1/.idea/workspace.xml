@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="454c1696-df36-43b3-9995-4720c34afb2a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/javacc-7.0.2/examples/GUIParsing/GUIParsing.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/javacc-7.0.2/examples/JJTreeExamples/JJTreeExamples.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/libs/javacc-7.0.2/examples/examples.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/base.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/base_erreur_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/final.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/for_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/for_2.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/for_3.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/for_4.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/for_5.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/for_6.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/if_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/if_10.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/if_2.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/if_3.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/if_4.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/if_5.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/if_6.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/if_7.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/if_8.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/if_9.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/if_erreur_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/liste_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/liste_2.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/liste_3.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/liste_erreur_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/liste_erreur_2.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/liste_erreur_3.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_10.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_11.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_12.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_13.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_14.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_15.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_16.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_17.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_2.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_3.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_4.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_5.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_6.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_7.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_8.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_9.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/op_erreur_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/real_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/real_2.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/real_3.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/real_4.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/real_5.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/real_6.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/real_7.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/real_8.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/real_erreur_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/switch_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/switch_2.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/switch_3.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/switch_4.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/switch_5.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/switch_6.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/switch_7.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/switch_erreur_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/switch_erreur_2.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/switch_erreur_3.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/switch_erreur_4.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/while_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/while_2.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/while_3.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/while_4.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/while_erreur_1.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/while_erreur_2.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-suite/SyntaxTest/result/while_erreur_3.le" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TP2/sources_HIV24/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../TP2/sources_HIV24/.idea/vcs.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2cgwnmhoKR1jMyXkDNDU7zqS9qu" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/simon/Documents/Etudes/poly_hiv2024/LOG3210/TPs/LOG3210/TP2",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="454c1696-df36-43b3-9995-4720c34afb2a" name="Changes" comment="" />
+      <created>1708546699047</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1708546699047</updated>
+      <workItem from="1708546700271" duration="217000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

@@ -1,8 +1,0 @@
-  Program
-   AssignStmt
-    Identifier
-    Addition
-     IntValue
-     Multi
-      IntValue
-      IntValue

@@ -316,26 +316,22 @@ public class SemantiqueVisitor implements ParserVisitor {
     @Override
     public Object visit(ASTNotExpr node, Object data) {
         // TODO
+        node.jjtGetChild(0).jjtAccept(this, data);
         if (!node.getOps().isEmpty()){
-            DataStruct d = new DataStruct();
-            node.jjtGetChild(0).jjtAccept(this, d);
-            if (d.type != VarType.Bool) throw new SemantiqueError("Invalid type in expression");
+            if (((DataStruct)data).type != VarType.Bool) throw new SemantiqueError("Invalid type in expression");
             this.OP++;
         }
-        node.childrenAccept(this, data);
         return null;
     }
 
     @Override
     public Object visit(ASTUnaExpr node, Object data) {
         // TODO
+        node.jjtGetChild(0).jjtAccept(this, data);
         if (!node.getOps().isEmpty()){
-            DataStruct d = new DataStruct();
-            node.jjtGetChild(0).jjtAccept(this, d);
-            if (d.type != VarType.Number) throw new SemantiqueError("Invalid type in expression");
+            if (((DataStruct)data).type != VarType.Number) throw new SemantiqueError("Invalid type in expression");
             this.OP++;
         }
-        node.childrenAccept(this, data);
         return null;
     }
 

@@ -1,9 +1,0 @@
-  Program
-   ForStmt
-    AssignStmt
-     Identifier
-     IntValue
-    IntValue
-    AssignStmt
-     Identifier
-     IntValue
