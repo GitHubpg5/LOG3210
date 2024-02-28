@@ -96,7 +96,7 @@ public class SemantiqueVisitor implements ParserVisitor {
                 throw new SemantiqueError(String.format("Identifier %s has been declared with the type %s that does not exist", childNode2.getValue(), childNode1.getValue()));
             }
 
-            SymbolTable.put(childNode2.getValue(), VarType.EnumValue);
+            SymbolTable.put(childNode2.getValue(), VarType.EnumVar);
         }
         else {
             ASTIdentifier childNode = (ASTIdentifier) node.jjtGetChild(0);
@@ -167,7 +167,9 @@ public class SemantiqueVisitor implements ParserVisitor {
         String varNameLeft = ((ASTIdentifier) node.jjtGetChild(0)).getValue();
         DataStruct rightChild = new DataStruct();
         node.jjtGetChild(1).jjtAccept(this, rightChild);
-        if (SymbolTable.get(varNameLeft) != rightChild.type) throw new SemantiqueError(String.format("Invalid type in assignation of Identifier %s", varNameLeft));
+        if (SymbolTable.get(varNameLeft) == VarType.EnumVar && rightChild.type == VarType.EnumValue) return null;
+        if (SymbolTable.get(varNameLeft) != rightChild.type) throw new SemantiqueError(String.format(
+                "Invalid type in assignation of Identifier %s", varNameLeft));
         // TODO
         return null;
     }
@@ -188,22 +190,45 @@ public class SemantiqueVisitor implements ParserVisitor {
             }
             SymbolTable.put(CurrentSymbol, VarType.EnumValue);
         }
-
-        //throw new SemantiqueError(String.format("Identifier %s has multiple declarations", varName));
-
-        //throw new SemantiqueError(String.format("Identifier %s has been declared with the type %s that does not exist", varName, typeName);
         return null;
     }
 
     @Override
     public Object visit(ASTSwitchStmt node, Object data) {
         // TODO
+        int numChildren = node.jjtGetNumChildren();
+        String child = ((ASTIdentifier)node.jjtGetChild(0)).getValue();
+        if (SymbolTable.get(child) != VarType.Number && SymbolTable.get(child) != VarType.EnumVar) throw new SemantiqueError(String.format("Invalid type in switch of Identifier %s", ((ASTIdentifier)node.jjtGetChild(0)).getValue()));
+
+        for(int i = 1; i < numChildren; i++){
+            DataStruct d = new DataStruct();
+            d.type = SymbolTable.get(child);
+            System.out.println("j'ai mit un : " + d.type);
+            node.jjtGetChild(i).jjtAccept(this, d);
+        }
         return null;
     }
 
     @Override
     public Object visit(ASTCaseStmt node, Object data) {
         // TODO
+        DataStruct d = new DataStruct();
+        Node childNode = node.jjtGetChild(0);
+        node.jjtGetChild(0).jjtAccept(this, d);
+        System.out.println(((DataStruct)data).type);
+        System.out.println(d.type);
+        if (d.type == VarType.EnumVar) d.type = VarType.EnumValue;
+
+
+        if(((DataStruct)data).type != d.type) {
+            if(childNode instanceof ASTIdentifier) throw new SemantiqueError(
+                    String.format("Invalid type in case of Identifier %s",
+                            ((ASTIdentifier) node.jjtGetChild(0)).getValue()));
+            else if (childNode instanceof ASTIntValue) throw new SemantiqueError(
+                    String.format("Invalid type in case of integer %s",
+                            ((ASTIntValue) node.jjtGetChild(0)).getValue()));
+        }
+        node.jjtGetChild(1).jjtAccept(this, d);
         return null;
     }
 
