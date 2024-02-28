@@ -90,26 +90,18 @@ public class SemantiqueVisitor implements ParserVisitor {
         if (node.jjtGetNumChildren() == 2){
             ASTIdentifier childNode1 = (ASTIdentifier) node.jjtGetChild(0);
             ASTIdentifier childNode2 = (ASTIdentifier) node.jjtGetChild(1);
-            System.out.println(SymbolTable.get(childNode1.getValue()));
-
 
             if(SymbolTable.containsKey(childNode2.getValue())) throw new SemantiqueError(String.format("Identifier %s has multiple declarations", childNode2.getValue()));
             else if (!SymbolTable.containsKey(childNode1.getValue()) || SymbolTable.get(childNode1.getValue()) != VarType.EnumType){
                 throw new SemantiqueError(String.format("Identifier %s has been declared with the type %s that does not exist", childNode2.getValue(), childNode1.getValue()));
             }
-            System.out.println("Enum ? : " + childNode1.getValue());
-            System.out.println("Children Number : " + node.jjtGetNumChildren());
 
-            SymbolTable.put(childNode2.getValue(), VarType.EnumVar);
-
+            SymbolTable.put(childNode2.getValue(), VarType.EnumValue);
         }
         else {
             ASTIdentifier childNode = (ASTIdentifier) node.jjtGetChild(0);
             String varName = (childNode).getValue();
             // TODO
-            if (false) {
-                throw new SemantiqueError(String.format("Identifier %s has been declared with the type B that does not exist", varName));
-            }
             if (SymbolTable.containsKey(varName)) {
                 throw new SemantiqueError(String.format("Identifier %s has multiple declarations", varName));
             }
@@ -175,10 +167,6 @@ public class SemantiqueVisitor implements ParserVisitor {
         String varNameLeft = ((ASTIdentifier) node.jjtGetChild(0)).getValue();
         DataStruct rightChild = new DataStruct();
         node.jjtGetChild(1).jjtAccept(this, rightChild);
-        if (SymbolTable.get(varNameLeft) == VarType.EnumType && rightChild.type == VarType.EnumVar) {
-            System.out.println("hello");
-        }
-
         if (SymbolTable.get(varNameLeft) != rightChild.type) throw new SemantiqueError(String.format("Invalid type in assignation of Identifier %s", varNameLeft));
         // TODO
         return null;
@@ -198,7 +186,7 @@ public class SemantiqueVisitor implements ParserVisitor {
             if(SymbolTable.containsKey(CurrentSymbol)){
                 throw new SemantiqueError(String.format("Identifier %s has multiple declarations", CurrentSymbol));
             }
-            SymbolTable.put(CurrentSymbol, VarType.EnumVar);
+            SymbolTable.put(CurrentSymbol, VarType.EnumValue);
         }
 
         //throw new SemantiqueError(String.format("Identifier %s has multiple declarations", varName));
@@ -257,7 +245,6 @@ public class SemantiqueVisitor implements ParserVisitor {
             }
             ((DataStruct)data).type = VarType.Bool;
             this.OP++;
-            System.out.println("comp");
         }
         return null;
     }
