@@ -2,6 +2,7 @@ enum A {
     B, C, D, E, F, G
 }
 A var;
+num a;
 
 switch(var){
     case B:
