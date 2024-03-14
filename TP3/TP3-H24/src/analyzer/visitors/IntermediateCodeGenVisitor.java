@@ -46,6 +46,8 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
     public Object visit(ASTProgram node, Object data) {
         node.childrenAccept(this, data);
         // TODO
+        String label = newLabel();
+        m_writer.println(label);
         return null;
     }
 
@@ -68,6 +70,16 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
     public Object visit(ASTBlock node, Object data) {
         node.childrenAccept(this, data);
         // TODO
+        int numChildren = node.jjtGetNumChildren();
+        if(numChildren == 1){
+            return node.jjtGetChild(0).jjtAccept(this, data);
+        }
+        else {
+            for (int i = 0; i < numChildren - 1; i++){
+                String label = newLabel();
+                m_writer.println(label);
+            }
+        }
         return null;
     }
 
@@ -129,8 +141,11 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
     @Override
     public Object visit(ASTAssignStmt node, Object data) {
         String identifier = ((ASTIdentifier) node.jjtGetChild(0)).getValue();
-        node.jjtGetChild(1).jjtAccept(this, data);
+        String valeur = (String)node.jjtGetChild(1).jjtAccept(this, data);
         // TODO
+        if (SymbolTable.get(identifier) == VarType.Number) {
+            m_writer.println(identifier + " = " + valeur);
+        }
         return null;
     }
 
@@ -145,6 +160,12 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
         // dans les TPs précédents. Vous pouvez vérifier au cas par cas dans le fichier Grammaire.jjt.
         node.childrenAccept(this, data);
         // TODO
+        int numChildren = node.jjtGetNumChildren();
+        if(numChildren == 1){
+            return node.jjtGetChild(0).jjtAccept(this, data);
+        }
+
+
         return null;
     }
 
@@ -162,6 +183,10 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
     public Object visit(ASTUnaExpr node, Object data) {
         node.jjtGetChild(0).jjtAccept(this, data);
         // TODO
+        int numChildren = node.jjtGetNumChildren();
+        if(numChildren == 1){
+            return node.jjtGetChild(0).jjtAccept(this, data);
+        }
         return null;
     }
 
@@ -169,6 +194,12 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
     public Object visit(ASTBoolExpr node, Object data) {
         node.childrenAccept(this, data);
         // TODO
+
+        int numChildren = node.jjtGetNumChildren();
+        if(numChildren == 1){
+            return node.jjtGetChild(0).jjtAccept(this, data);
+        }
+
         return null;
     }
 
@@ -176,21 +207,30 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
     public Object visit(ASTCompExpr node, Object data) {
         node.childrenAccept(this, data);
         // TODO
+        int numChildren = node.jjtGetNumChildren();
+        if(numChildren == 1){
+            return node.jjtGetChild(0).jjtAccept(this, data);
+        }
         return null;
     }
 
     @Override
     public Object visit(ASTNotExpr node, Object data) {
-        node.jjtGetChild(0).jjtAccept(this, data);
+        // node.jjtGetChild(0).jjtAccept(this, data);
         // TODO
+        int numChildren = node.jjtGetNumChildren();
+        if(numChildren == 1){
+            return node.jjtGetChild(0).jjtAccept(this, data);
+        }
+
         return null;
     }
 
     @Override
     public Object visit(ASTGenValue node, Object data) {
-        node.jjtGetChild(0).jjtAccept(this, data);
+        return node.jjtGetChild(0).jjtAccept(this, data);
         // TODO
-        return null;
+        //return null;
     }
 
     @Override
@@ -202,6 +242,8 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
     @Override
     public Object visit(ASTIdentifier node, Object data) {
         // TODO
+
+
         return node.getValue();
     }
 
