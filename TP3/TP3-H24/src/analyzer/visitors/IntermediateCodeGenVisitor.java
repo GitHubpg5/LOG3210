@@ -44,9 +44,9 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
 
     @Override
     public Object visit(ASTProgram node, Object data) {
+        String label = newLabel();
         node.childrenAccept(this, data);
         // TODO
-        String label = newLabel();
         m_writer.println(label);
         return null;
     }
@@ -68,17 +68,21 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
 
     @Override
     public Object visit(ASTBlock node, Object data) {
-        node.childrenAccept(this, data);
+        //node.childrenAccept(this, data);
         // TODO
         int numChildren = node.jjtGetNumChildren();
         if(numChildren == 1){
             return node.jjtGetChild(0).jjtAccept(this, data);
         }
         else {
-            for (int i = 0; i < numChildren - 1; i++){
+            int i = 0;
+            while (i < numChildren -1){
+                node.jjtGetChild(i).jjtAccept(this, data);
                 String label = newLabel();
                 m_writer.println(label);
+                i++;
             }
+            node.jjtGetChild(i).jjtAccept(this, data);
         }
         return null;
     }
@@ -158,15 +162,19 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
         // À noter qu'il n'est pas nécessaire de boucler sur tous les enfants.
         // La grammaire n'accepte plus que 2 enfants maximum pour certaines opérations, au lieu de plusieurs
         // dans les TPs précédents. Vous pouvez vérifier au cas par cas dans le fichier Grammaire.jjt.
-        node.childrenAccept(this, data);
         // TODO
+
         int numChildren = node.jjtGetNumChildren();
-        if(numChildren == 1){
+        if(numChildren == 1 || ops.isEmpty()){
             return node.jjtGetChild(0).jjtAccept(this, data);
         }
-
-
-        return null;
+        else{
+            String newId = newID();
+            String gauche = (String)node.jjtGetChild(0).jjtAccept(this, data);
+            String droite = (String)node.jjtGetChild(1).jjtAccept(this, data);
+            m_writer.println(newId + " = " + gauche + " " + ops.get(0) + " " + droite);
+            return newId;
+        }
     }
 
     @Override
@@ -181,48 +189,54 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
 
     @Override
     public Object visit(ASTUnaExpr node, Object data) {
-        node.jjtGetChild(0).jjtAccept(this, data);
         // TODO
-        int numChildren = node.jjtGetNumChildren();
-        if(numChildren == 1){
-            return node.jjtGetChild(0).jjtAccept(this, data);
+        String idActuel = " ";
+        int nbOps = node.getOps().size();
+        Object enfant = node.jjtGetChild(0).jjtAccept(this, data);
+        if (nbOps > 0){
+            idActuel = newID();
+            m_writer.println(idActuel + " = - " + enfant);
+            for (int i = 1; i < nbOps ; i++) {
+                String idProchain = newID();
+                m_writer.println(idProchain + " = - " + idActuel);
+                idActuel = idProchain;
+            }
+            return idActuel;
         }
-        return null;
+        else return enfant;
     }
 
     @Override
     public Object visit(ASTBoolExpr node, Object data) {
-        node.childrenAccept(this, data);
         // TODO
 
         int numChildren = node.jjtGetNumChildren();
         if(numChildren == 1){
             return node.jjtGetChild(0).jjtAccept(this, data);
         }
-
+        else node.childrenAccept(this, data);
         return null;
     }
 
     @Override
     public Object visit(ASTCompExpr node, Object data) {
-        node.childrenAccept(this, data);
         // TODO
         int numChildren = node.jjtGetNumChildren();
         if(numChildren == 1){
             return node.jjtGetChild(0).jjtAccept(this, data);
         }
+        else node.childrenAccept(this, data);
         return null;
     }
 
     @Override
     public Object visit(ASTNotExpr node, Object data) {
-        // node.jjtGetChild(0).jjtAccept(this, data);
         // TODO
         int numChildren = node.jjtGetNumChildren();
         if(numChildren == 1){
             return node.jjtGetChild(0).jjtAccept(this, data);
         }
-
+        else node.childrenAccept(this, data);
         return null;
     }
 
@@ -242,7 +256,6 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
     @Override
     public Object visit(ASTIdentifier node, Object data) {
         // TODO
-
 
         return node.getValue();
     }
