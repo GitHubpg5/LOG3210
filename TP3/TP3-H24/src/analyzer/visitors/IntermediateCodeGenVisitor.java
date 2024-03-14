@@ -145,10 +145,19 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
     @Override
     public Object visit(ASTAssignStmt node, Object data) {
         String identifier = ((ASTIdentifier) node.jjtGetChild(0)).getValue();
-        String valeur = (String)node.jjtGetChild(1).jjtAccept(this, data);
         // TODO
         if (SymbolTable.get(identifier) == VarType.Number) {
-            m_writer.println(identifier + " = " + valeur);
+            m_writer.println(identifier + " = " + node.jjtGetChild(1).jjtAccept(this, data));
+        }
+        else {
+            BoolLabel boolLabel = new BoolLabel(newLabel(), newLabel());
+            node.jjtGetChild(1).jjtAccept(this, boolLabel);
+            //m_writer.println("goto " + boolLabel.lTrue);
+            m_writer.println(boolLabel.lTrue);
+            m_writer.println(identifier + " = 1");
+            //m_writer.println("goto " + boolLabel.lFalse);
+            m_writer.println(boolLabel.lFalse);
+            m_writer.println(identifier + " = 0");
         }
         return null;
     }
@@ -250,13 +259,13 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
     @Override
     public Object visit(ASTBoolValue node, Object data) {
         // TODO
+        System.out.println(Boolean.toString(node.getValue()));
         return null;
     }
 
     @Override
     public Object visit(ASTIdentifier node, Object data) {
         // TODO
-
         return node.getValue();
     }
 
