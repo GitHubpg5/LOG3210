@@ -254,7 +254,11 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
         if(numChildren == 1){
             return node.jjtGetChild(0).jjtAccept(this, data);
         }
-        else node.childrenAccept(this, data);
+        else {
+            m_writer.println("if " + node.jjtGetChild(0).jjtAccept(this, data) + " " + node.getValue() + " "
+                    + node.jjtGetChild(1).jjtAccept(this, data) + " goto " + ((BoolLabel)data).lTrue);
+            m_writer.println("goto " + ((BoolLabel)data).lFalse);
+        }
         return null;
     }
 
