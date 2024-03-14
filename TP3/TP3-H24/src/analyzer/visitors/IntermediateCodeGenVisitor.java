@@ -124,14 +124,28 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
 
     @Override
     public Object visit(ASTIfStmt node, Object data) {
-        node.childrenAccept(this, data);
-        /*int numChildren = node.jjtGetNumChildren();
-        if(numChildren == 1){
-            return node.jjtGetChild(0).jjtAccept(this, data);
+        //childrenAccept(this, data);
+        int numChildren = node.jjtGetNumChildren();
+        switch (numChildren){
+            case (1): return node.jjtGetChild(0).jjtAccept(this, data);
+            case (2):
+                String ifLabel = newLabel();
+                node.jjtGetChild(0).jjtAccept(this, new BoolLabel(ifLabel, (String)data));
+                m_writer.println(ifLabel);
+                node.jjtGetChild(1).jjtAccept(this, data);
+                break;
+            case (3):
+                String trueLabel = newLabel();
+                String falseLabel = newLabel();
+                BoolLabel boolLabel = new BoolLabel(trueLabel, falseLabel);
+                node.jjtGetChild(0).jjtAccept(this, boolLabel);
+                m_writer.println(trueLabel);
+                node.jjtGetChild(1).jjtAccept(this, data);
+                m_writer.println("goto " + data);
+                m_writer.println(falseLabel);
+                node.jjtGetChild(2).jjtAccept(this, data);
+                break;
         }
-        else {
-            node.jjtGetChild(0).jjtAccept(this, data);
-        }*/
         // TODO
         return null;
     }
