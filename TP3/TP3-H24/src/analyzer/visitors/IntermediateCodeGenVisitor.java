@@ -68,7 +68,6 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
 
     @Override
     public Object visit(ASTBlock node, Object data) {
-        //node.childrenAccept(this, data);
         // TODO
         int numChildren = node.jjtGetNumChildren();
         if(numChildren == 1){
@@ -89,6 +88,13 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
 
     @Override
     public Object visit(ASTEnumStmt node, Object data) {
+        int numChildren = node.jjtGetNumChildren();
+        for (int i = 1; i < numChildren; i++) {
+            String enumName = ((ASTIdentifier) node.jjtGetChild(i)).getValue();
+            SymbolTable.put(enumName, VarType.EnumType);
+            EnumValueTable.put(enumName, i-1);
+        }
+        System.out.println(numChildren);
         node.childrenAccept(this, data);
         // TODO
         return null;
@@ -124,7 +130,6 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
 
     @Override
     public Object visit(ASTIfStmt node, Object data) {
-        //childrenAccept(this, data);
         int numChildren = node.jjtGetNumChildren();
         switch (numChildren){
             case (1): return node.jjtGetChild(0).jjtAccept(this, data);
@@ -165,7 +170,6 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
 
     @Override
     public Object visit(ASTForStmt node, Object data) {
-        // node.childrenAccept(this, data);
         // TODO
 
         String topLabel = newLabel();
@@ -188,6 +192,10 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
         // TODO
         if (SymbolTable.get(identifier) == VarType.Number) {
             m_writer.println(identifier + " = " + node.jjtGetChild(1).jjtAccept(this, data));
+        }
+        else if (SymbolTable.get(identifier) == VarType.EnumVar){
+            String value = (String)node.jjtGetChild(1).jjtAccept(this, data);
+            m_writer.println(identifier + " = " + EnumValueTable.get(value));
         }
         else {
             BoolLabel boolLabel = new BoolLabel(newLabel(), newLabel());
