@@ -70,7 +70,8 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
     public Object visit(ASTBlock node, Object data) {
         // TODO
         int numChildren = node.jjtGetNumChildren();
-        if(numChildren == 1){
+        if (numChildren == 0) return null;
+        else if(numChildren == 1){
             return node.jjtGetChild(0).jjtAccept(this, data);
         }
         else {
@@ -94,7 +95,6 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
             SymbolTable.put(enumName, VarType.EnumType);
             EnumValueTable.put(enumName, i-1);
         }
-        System.out.println(numChildren);
         node.childrenAccept(this, data);
         // TODO
         return null;
@@ -102,21 +102,45 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
 
     @Override
     public Object visit(ASTSwitchStmt node, Object data) {
-        node.childrenAccept(this, data);
+        //node.childrenAccept(this, data);
         // TODO
+        int numChildren = node.jjtGetNumChildren();
+        String identifier = (String)node.jjtGetChild(0).jjtAccept(this, data);
+        // String topLabel = newLabel();
+        String prochainLabel = newLabel();
+        for (int i = 1; i < numChildren -1 ; i++) {
+
+            String value = (String)node.jjtGetChild(i).jjtGetChild(0).jjtAccept(this, prochainLabel);
+            m_writer.println("if " + identifier + " != " + EnumValueTable.get(value) + " goto " + prochainLabel);
+            node.jjtGetChild(i).jjtAccept(this, data);
+            m_writer.println(prochainLabel);
+            prochainLabel = newLabel();
+        }
+        String value = (String)node.jjtGetChild(numChildren - 1).jjtGetChild(0).jjtAccept(this, data);
+        m_writer.println("if " + identifier + " != " + EnumValueTable.get(value) + " goto " + data);
+        node.jjtGetChild(numChildren - 1).jjtAccept(this, data);
         return null;
     }
 
     @Override
     public Object visit(ASTCaseStmt node, Object data) {
-        node.childrenAccept(this, data);
+        // node.childrenAccept(this, data);
         // TODO
-        return null;
+
+        // m_writer.println("if " + identifier + " != " + value + " goto " + data);
+        int numChildren = node.jjtGetNumChildren();
+        if (numChildren == 0) return null;
+        for (int i = 1; i < numChildren ; i++) {
+            node.jjtGetChild(i).jjtAccept(this, data);
+        }
+
+        return node.jjtGetChild(0).jjtAccept(this, data);
     }
 
     @Override
     public Object visit(ASTBreakStmt node, Object data) {
         node.childrenAccept(this, data);
+        m_writer.println("goto " + data);
         // TODO
         return null;
     }
