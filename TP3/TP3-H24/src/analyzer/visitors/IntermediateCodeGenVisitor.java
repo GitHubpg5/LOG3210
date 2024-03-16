@@ -122,7 +122,7 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
         String value = (String) node.jjtGetChild(numChildren - 1).jjtGetChild(0).jjtAccept(this, labels);
         m_writer.println("if " + identifier + " != " + EnumValueTable.get(value) + " goto " + data);
         if (labels.size() >= 2) {
-            labels.remove(labels.size() - 2);
+            m_writer.println(labels.remove(labels.size() - 1));
         }
         node.jjtGetChild(numChildren - 1).jjtAccept(this, labels);
         return null;
