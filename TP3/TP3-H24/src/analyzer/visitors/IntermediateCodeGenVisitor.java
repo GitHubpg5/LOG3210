@@ -104,26 +104,27 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
         //node.childrenAccept(this, data);
         // TODO
         int numChildren = node.jjtGetNumChildren();
+        String switchFollow = (String) data;
         String identifier = (String) node.jjtGetChild(0).jjtAccept(this, data);
         // String topLabel = newLabel();
-        String prochainLabel = newLabel();
-        boolean breaklessCase = false;
+        Vector<String> labels = new Vector<String>();
+        labels.add(switchFollow);
         for (int i = 1; i < numChildren - 1; i++) {
-
-            String value = (String) node.jjtGetChild(i).jjtGetChild(0).jjtAccept(this, prochainLabel);
-            m_writer.println("if " + identifier + " != " + EnumValueTable.get(value) + " goto " + prochainLabel);
-            String lastCaseValue = node.jjtGetChild(i).jjtGetChild(node.jjtGetChild(i).jjtGetNumChildren() - 1).getClass().toString();
+            labels.add(newLabel());
+            String value = (String) node.jjtGetChild(i).jjtGetChild(0).jjtAccept(this, labels);
+            m_writer.println("if " + identifier + " != " + EnumValueTable.get(value) + " goto " + labels.get(labels.size() - 1));
+            if (labels.size() >= 3) {
+                m_writer.println(labels.remove(labels.size() - 2));
+            }
             // m_writer.println("goto _L" + label);
-            breaklessCase = lastCaseValue != "class analyzer.ast.ASTBreakStmt";
-            node.jjtGetChild(i).jjtAccept(this, data);
-            m_writer.println(prochainLabel);
-            prochainLabel = newLabel();
-            if (breaklessCase)
-                prochainLabel = newLabel();
+            node.jjtGetChild(i).jjtAccept(this, labels);
         }
-        String value = (String) node.jjtGetChild(numChildren - 1).jjtGetChild(0).jjtAccept(this, data);
+        String value = (String) node.jjtGetChild(numChildren - 1).jjtGetChild(0).jjtAccept(this, labels);
         m_writer.println("if " + identifier + " != " + EnumValueTable.get(value) + " goto " + data);
-        node.jjtGetChild(numChildren - 1).jjtAccept(this, data);
+        if (labels.size() >= 2) {
+            labels.remove(labels.size() - 2);
+        }
+        node.jjtGetChild(numChildren - 1).jjtAccept(this, labels);
         return null;
     }
 
@@ -136,10 +137,16 @@ public class IntermediateCodeGenVisitor implements ParserVisitor {
         int numChildren = node.jjtGetNumChildren();
         if (numChildren == 0) return null;
         for (int i = 1; i < numChildren; i++) {
-            node.jjtGetChild(i).jjtAccept(this, data);
+            node.jjtGetChild(i).jjtAccept(this, ((Vector<String>) data).firstElement());
         }
-
-        return node.jjtGetChild(0).jjtAccept(this, data);
+        String lastChildClass = node.jjtGetChild(node.jjtGetNumChildren() - 1).getClass().toString();
+        if (!lastChildClass.equals("class analyzer.ast.ASTBreakStmt") && ((Vector<String>) data).size() > 1) {
+            ((Vector<String>) data).add(newLabel());
+            m_writer.println("goto " + ((Vector<String>) data).get(((Vector<String>) data).size() - 1));
+        }
+        if (((Vector<String>) data).size() > 1)
+            m_writer.println(((Vector<String>) data).remove(1));
+        return null;
     }
 
     @Override
