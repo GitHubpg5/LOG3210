@@ -112,18 +112,22 @@ public class IntermediateCodeGenFallVisitor implements ParserVisitor {
         Vector<String> labels = new Vector<String>();
         labels.add(switchFollow);
         for (int i = 1; i < numChildren - 1; i++) {
-            labels.add(newLabel());
             String value = (String) node.jjtGetChild(i).jjtGetChild(0).jjtAccept(this, labels);
-            m_writer.println("if " + identifier + " != " + EnumValueTable.get(value) + " goto " + labels.get(labels.size() - 1));
-            if (labels.size() >= 3) {
+            labels.add(newLabel());
+            m_writer.println("if " + identifier + " == " + EnumValueTable.get(value) + " goto " + labels.get(labels.size() - 1));
+            labels.add(newLabel());
+            m_writer.println("goto " + labels.get(labels.size() - 1));
+            for (int j = 0; j < labels.size() - 1; j++) {
                 m_writer.println(labels.remove(labels.size() - 2));
             }
-            // m_writer.println("goto _L" + label);
             node.jjtGetChild(i).jjtAccept(this, labels);
         }
         String value = (String) node.jjtGetChild(numChildren - 1).jjtGetChild(0).jjtAccept(this, labels);
-        m_writer.println("if " + identifier + " != " + EnumValueTable.get(value) + " goto " + data);
-        if (labels.size() >= 2) {
+        labels.add(newLabel());
+        m_writer.println("if " + identifier + " == " + EnumValueTable.get(value) + " goto " + labels.get(labels.size() - 1));
+        m_writer.println("goto " + labels.get(0));
+        int var = labels.size();
+        for (int j = 0; j < var - 1; j++) {
             m_writer.println(labels.remove(labels.size() - 1));
         }
         node.jjtGetChild(numChildren - 1).jjtAccept(this, labels);
