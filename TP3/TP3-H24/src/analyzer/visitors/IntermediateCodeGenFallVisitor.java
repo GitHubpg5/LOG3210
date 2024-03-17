@@ -49,7 +49,7 @@ public class IntermediateCodeGenFallVisitor implements ParserVisitor {
         String label = newLabel();
         node.childrenAccept(this, label);
         // TODO
-        m_writer.println(label + " PROGRAM");
+        m_writer.println(label);
         return null;
     }
 
@@ -80,7 +80,7 @@ public class IntermediateCodeGenFallVisitor implements ParserVisitor {
             while (i < numChildren - 1) {
                 String label = newLabel();
                 node.jjtGetChild(i).jjtAccept(this, label);
-                m_writer.println(label + "BLOCK");
+                m_writer.println(label);
                 i++;
             }
             node.jjtGetChild(i).jjtAccept(this, data);
@@ -245,10 +245,10 @@ public class IntermediateCodeGenFallVisitor implements ParserVisitor {
             String resp = (String) node.jjtGetChild(1).jjtAccept(this, boolLabel);
             // m_writer.println(resp);
             if (resp.equals(secondLabel))
-                m_writer.println("goto " + boolLabel.lFalse + identifier);
+                m_writer.println("goto " + boolLabel.lFalse);
             m_writer.println(identifier + " = 1");
             m_writer.println("goto " + data);
-            m_writer.println(boolLabel.lFalse + " LFALSE");
+            m_writer.println(boolLabel.lFalse);
             m_writer.println(identifier + " = 0");
         }
         return null;
@@ -312,14 +312,14 @@ public class IntermediateCodeGenFallVisitor implements ParserVisitor {
         String resp;
         if (numChildren == 1) {
             resp = (String) node.jjtGetChild(0).jjtAccept(this, data);
-            if (resp.equals(((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse))
-                m_writer.println("goto " + ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse);
         } else {
             if (node.getOps().get(0).equals("&&")) {
                 // String newLabel = newLabel();
                 // node.jjtGetChild(0).jjtAccept(this, new IntermediateCodeGenFallVisitor.BoolLabel(newLabel, ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse));
                 // m_writer.println(newLabel + "BOOL 1");
                 resp = (String) node.jjtGetChild(1).jjtAccept(this, data);
+                if (resp.equals(((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse))
+                    m_writer.println("goto " + ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse);
             } else {
                 String newLabel = newLabel();
                 node.jjtGetChild(0).jjtAccept(this, new IntermediateCodeGenFallVisitor.BoolLabel(((IntermediateCodeGenFallVisitor.BoolLabel) data).lTrue, newLabel));
