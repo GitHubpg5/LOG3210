@@ -327,11 +327,6 @@ public class IntermediateCodeGenFallVisitor implements ParserVisitor {
                 if (((BoolLabel) data).lFalse == FALL){
                     m_writer.println(boolLabelGauche.lFalse);
                 }
-                // String newLabel = newLabel();
-                // node.jjtGetChild(0).jjtAccept(this, new IntermediateCodeGenFallVisitor.BoolLabel(newLabel, ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse));
-                // m_writer.println(newLabel + "BOOL 1");
-                // resp = (String) node.jjtGetChild(1).jjtAccept(this, data);
-                // if (resp.equals(((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse))  m_writer.println("goto mdr " + ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse);
             } else {
                 BoolLabel boolLabelGauche = null;
                 if (((BoolLabel) data).lTrue == FALL) {
@@ -361,11 +356,26 @@ public class IntermediateCodeGenFallVisitor implements ParserVisitor {
         if (numChildren == 1) {
             return node.jjtGetChild(0).jjtAccept(this, data);
         } else {
-            if ((node.jjtGetChild(0).jjtAccept(this, data).equals(((IntermediateCodeGenFallVisitor.BoolLabel) data).lTrue)))
-                m_writer.println("goto " + ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse + "TBK");
-            m_writer.println("if " + node.jjtGetChild(0).jjtAccept(this, data) + " " + node.getValue() + " "
-                    + node.jjtGetChild(1).jjtAccept(this, data) + " goto " + ((IntermediateCodeGenFallVisitor.BoolLabel) data).lTrue);
-            m_writer.println("goto " + ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse);
+            String leftChild = (String) node.jjtGetChild(0).jjtAccept(this, data);
+            String rightChild = (String) node.jjtGetChild(1).jjtAccept(this, data);
+            String operator = node.getValue();
+            if(((BoolLabel) data).lTrue != FALL && ((BoolLabel) data).lFalse != FALL)
+            {
+                m_writer.println("if " + leftChild + " " + operator + " " + rightChild + " goto " +
+                        ((IntermediateCodeGenFallVisitor.BoolLabel) data).lTrue);
+                m_writer.println("goto " + ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse);
+            }
+            else if(((BoolLabel) data).lTrue != FALL && ((BoolLabel) data).lFalse == FALL)
+            {
+                m_writer.println("if " + leftChild + " " + operator + " " + rightChild + " goto " +
+                        ((IntermediateCodeGenFallVisitor.BoolLabel) data).lTrue);
+            }
+            else if(((BoolLabel) data).lTrue == FALL && ((BoolLabel) data).lFalse != FALL)
+            {
+                m_writer.println("ifFalse " + leftChild + " " + operator + " " + rightChild + " goto " +
+                        ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse);
+            }
+            else throw new Error();
         }
         return null;
     }
