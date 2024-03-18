@@ -1,6 +1,7 @@
 package analyzer.visitors;
 
 import analyzer.ast.*;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -239,13 +240,10 @@ public class IntermediateCodeGenFallVisitor implements ParserVisitor {
             String value = (String) node.jjtGetChild(1).jjtAccept(this, data);
             m_writer.println(identifier + " = " + EnumValueTable.get(value));
         } else {
-            String firstLabel = "_L" + (label - 1);
+            // String firstLabel =
             String secondLabel = newLabel();
-            IntermediateCodeGenFallVisitor.BoolLabel boolLabel = new IntermediateCodeGenFallVisitor.BoolLabel(firstLabel, secondLabel);
-            String resp = (String) node.jjtGetChild(1).jjtAccept(this, boolLabel);
-            // m_writer.println(resp);
-            if (resp.equals(secondLabel))
-                m_writer.println("goto " + boolLabel.lFalse);
+            IntermediateCodeGenFallVisitor.BoolLabel boolLabel = new IntermediateCodeGenFallVisitor.BoolLabel(FALL, secondLabel);
+            node.jjtGetChild(1).jjtAccept(this, boolLabel);
             m_writer.println(identifier + " = 1");
             m_writer.println("goto " + data);
             m_writer.println(boolLabel.lFalse);
@@ -314,17 +312,43 @@ public class IntermediateCodeGenFallVisitor implements ParserVisitor {
             resp = (String) node.jjtGetChild(0).jjtAccept(this, data);
         } else {
             if (node.getOps().get(0).equals("&&")) {
+
+                BoolLabel boolLabelGauche = null;
+
+                if (((BoolLabel) data).lFalse == FALL) {
+                    boolLabelGauche = new BoolLabel(FALL, newLabel());
+                }
+                else {
+                    boolLabelGauche = new BoolLabel(FALL, ((BoolLabel) data).lFalse);
+                }
+                resp = (String)node.jjtGetChild(0).jjtAccept(this, boolLabelGauche);
+                node.jjtGetChild(1).jjtAccept(this, data);
+
+                if (((BoolLabel) data).lFalse == FALL){
+                    m_writer.println(boolLabelGauche.lFalse);
+                }
                 // String newLabel = newLabel();
                 // node.jjtGetChild(0).jjtAccept(this, new IntermediateCodeGenFallVisitor.BoolLabel(newLabel, ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse));
                 // m_writer.println(newLabel + "BOOL 1");
-                resp = (String) node.jjtGetChild(1).jjtAccept(this, data);
-                if (resp.equals(((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse))
-                    m_writer.println("goto " + ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse);
+                // resp = (String) node.jjtGetChild(1).jjtAccept(this, data);
+                // if (resp.equals(((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse))  m_writer.println("goto mdr " + ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse);
             } else {
-                String newLabel = newLabel();
+                BoolLabel boolLabelGauche = null;
+                if (((BoolLabel) data).lTrue == FALL) {
+                    boolLabelGauche = new BoolLabel(newLabel(), FALL);
+                }
+                else boolLabelGauche = new BoolLabel(((BoolLabel) data).lTrue, FALL);
+
+                resp = (String)node.jjtGetChild(0).jjtAccept(this, boolLabelGauche);
+                node.jjtGetChild(1).jjtAccept(this, data);
+
+                if (((BoolLabel) data).lTrue == FALL){
+                    m_writer.println(boolLabelGauche.lTrue);
+                }
+                /* String newLabel = newLabel();
                 node.jjtGetChild(0).jjtAccept(this, new IntermediateCodeGenFallVisitor.BoolLabel(((IntermediateCodeGenFallVisitor.BoolLabel) data).lTrue, newLabel));
                 m_writer.println(newLabel + "BOOL 2");
-                resp = (String) node.jjtGetChild(1).jjtAccept(this, data);
+                resp = (String) node.jjtGetChild(1).jjtAccept(this, data);*/
             }
         }
         return resp;
@@ -365,6 +389,13 @@ public class IntermediateCodeGenFallVisitor implements ParserVisitor {
     @Override
     public Object visit(ASTBoolValue node, Object data) {
         // TODO
+        if (((BoolLabel) data).lTrue != FALL && node.getValue()){
+            m_writer.println("goto " + ((BoolLabel) data).lTrue);
+        }
+        else if (((BoolLabel) data).lFalse != FALL && !node.getValue()){
+            m_writer.println("goto " + ((BoolLabel) data).lFalse);
+        }
+
         // m_writer.println("goto LOL" + (node.getValue() ? ((IntermediateCodeGenFallVisitor.BoolLabel) data).lTrue : ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse));
         return (node.getValue() ? ((IntermediateCodeGenFallVisitor.BoolLabel) data).lTrue : ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse);
     }
@@ -374,8 +405,15 @@ public class IntermediateCodeGenFallVisitor implements ParserVisitor {
         // TODO
         String val = node.getValue();
         if (SymbolTable.get(val) == IntermediateCodeGenFallVisitor.VarType.Bool) {
-            m_writer.println("ifFalse " + val + " == 1 goto " + ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse);
-            // m_writer.println("goto " + ((IntermediateCodeGenFallVisitor.BoolLabel) data).lFalse); //TODO : J'ai enlever ca atm pour faire passer un test bool
+            if (((BoolLabel) data).lTrue != FALL && ((BoolLabel) data).lFalse != FALL) {
+                m_writer.println("if " + val + " == 1 goto " + ((BoolLabel) data).lTrue);
+                m_writer.println("goto " + ((BoolLabel) data).lFalse);
+            } else if (((BoolLabel) data).lTrue != FALL && ((BoolLabel) data).lFalse == FALL)
+                m_writer.println("if " + val + " == 1 goto " + ((BoolLabel) data).lTrue);
+            else if (((BoolLabel) data).lTrue == FALL && ((BoolLabel) data).lFalse != FALL)
+                m_writer.println("ifFalse " + val + " == 1 goto " + ((BoolLabel) data).lFalse);
+            else
+                throw new Error();
         }
         return val;
     }
