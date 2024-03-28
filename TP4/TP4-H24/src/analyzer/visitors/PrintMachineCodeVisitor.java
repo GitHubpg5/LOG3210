@@ -112,7 +112,7 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
         String assignation = (String) node.jjtGetChild(0).jjtAccept(this, null);
         String droite = (String) node.jjtGetChild(1).jjtAccept(this, null);
 
-        MachineCodeLine machineCodeLine = new MachineCodeLine("BALLS", assignation, "#0", droite);
+        MachineCodeLine machineCodeLine = new MachineCodeLine("uh", assignation, "#0", droite);
         CODE.add(machineCodeLine);
         return null;
     }
@@ -158,11 +158,28 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
             CODE.get(i).Life_IN = temp;
             //System.out.println(CODE.get(i).Life_IN);
         }
-        System.out.println(CODE.get(4).Life_IN);
     }
 
     private void computeNextUse() {
         // TODO (ex3): Implement next-use algorithm on the CODE array.
+        for(int i = 0; i < CODE.size(); i++)
+        {
+            CODE.get(i).Next_IN.nextUse.clear();
+            CODE.get(i).Next_OUT.nextUse.clear();
+        }
+        for(int i = CODE.size() - 1; i >= 0; i--)
+        {
+            if(i < (CODE.size() - 1)){
+                CODE.get(i).Next_OUT = (NextUse) CODE.get(i + 1).Next_IN.clone();
+            }
+            int finalI = i;
+            CODE.get(i).Next_OUT.nextUse.forEach((v, n) -> {
+                if(!CODE.get(finalI).DEF.contains(v)) {
+                    CODE.get(finalI).Next_IN.nextUse.put(v, (ArrayList<Integer>) n.clone()) ;
+                }});
+            CODE.get(i).REF.forEach((ref) -> CODE.get(finalI).Next_IN.add(ref, finalI));
+            System.out.println(CODE.get(i).REF);
+        }
     }
 
     /**
