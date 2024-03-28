@@ -75,6 +75,13 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
         // TODO (ex1): Modify CODE to add the needed MachLine.
         // Here the type of Assignment is "assigned = left op right".
         // You can pass null as data to children.
+        String op = node.getOp();
+        String assignation = (String) node.jjtGetChild(0).jjtAccept(this, null);
+        String gauche = (String) node.jjtGetChild(1).jjtAccept(this, null);
+        String droite = (String) node.jjtGetChild(2).jjtAccept(this, null);
+
+        MachineCodeLine machineCodeLine = new MachineCodeLine(op, assignation, gauche, droite);
+        CODE.add(machineCodeLine);
 
         return null;
     }
@@ -86,6 +93,12 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
         // Suppose the left part to be the constant "#O".
         // You can pass null as data to children.
 
+        String assignation = (String) node.jjtGetChild(0).jjtAccept(this, null);
+        String droite = (String) node.jjtGetChild(1).jjtAccept(this, null);
+
+        MachineCodeLine machineCodeLine = new MachineCodeLine("-", assignation, "", droite);
+        CODE.add(machineCodeLine);
+
         return null;
     }
 
@@ -96,6 +109,11 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
         // Suppose the left part to be the constant "#O".
         // You can pass null as data to children.
 
+        String assignation = (String) node.jjtGetChild(0).jjtAccept(this, null);
+        String droite = (String) node.jjtGetChild(1).jjtAccept(this, null);
+
+        MachineCodeLine machineCodeLine = new MachineCodeLine("BALLS", assignation, "#0", droite);
+        CODE.add(machineCodeLine);
         return null;
     }
 
@@ -116,6 +134,31 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
 
     private void computeLifeVar() {
         // TODO (ex2): Implement life variables algorithm on the CODE array.
+        for (int i = 0; i < CODE.size(); i++)
+        {
+//            IN[CODE.get(i)] = {};
+            CODE.get(i).Life_IN.clear();
+
+//            OUT[CODE.get(i)] = {};
+            CODE.get(i).Life_OUT.clear();
+        }
+//        OUT[CODE.size()-1] = Returned_Values;
+        CODE.get(CODE.size()-1).Life_OUT = new HashSet<>(RETURNS);
+        for (int i = CODE.size()-1; i >= 0; i--) {
+            if (i < (CODE.size() - 1)) {
+//                OUT[CODE.get(i)] = IN[CODE.get(i + 1)];
+                CODE.get(i).Life_OUT = CODE.get(i+1).Life_IN;
+            }
+            HashSet<String> temp = new HashSet<>(CODE.get(i).Life_OUT);
+            // (OUT[nodeList[i]] - DEF[nodeList[i]]
+            temp.removeAll(CODE.get(i).DEF);
+            // union REF[nodeList[i]]
+            temp.addAll(CODE.get(i).REF);
+            // IN[nodeList[i]] =
+            CODE.get(i).Life_IN = temp;
+            //System.out.println(CODE.get(i).Life_IN);
+        }
+        System.out.println(CODE.get(4).Life_IN);
     }
 
     private void computeNextUse() {
