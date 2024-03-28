@@ -193,7 +193,24 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
         // - put variable in space of an other variable which is not used anymore
         // *or*
         // - put variable in space of variable which as the largest next-use
+        if (variable.charAt(0) == '#')
+            return variable;
+        if(REGISTERS.contains(variable))
+            return "R" + REGISTERS.indexOf(variable);
+        if(REGISTERS.size() < MAX_REGISTERS_COUNT){
+            REGISTERS.add(variable);
+            return "R" + REGISTERS.indexOf(variable);
+        }
+        if(REGISTERS.size() == MAX_REGISTERS_COUNT){
+            int maxNextUse = -1;
+            int replacementKey = -1;
+            for(int i = 0; i < life.size(); i++)
+            {
 
+            }
+        }
+
+        // Le dernier cas est si le Register depasse le maximum pour une raison quelconque.
         return null;
     }
 
@@ -205,6 +222,10 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
         // You should change the code below.
         for (int i = 0; i < CODE.size(); i++) {
             m_writer.println("// Step " + i);
+            String assignation = chooseRegister(CODE.get(i).ASSIGN, CODE.get(i).Life_OUT, CODE.get(i).Next_IN, false);
+            String gauche = chooseRegister(CODE.get(i).ASSIGN, CODE.get(i).Life_IN, CODE.get(i).Next_IN, true);
+            String droite = chooseRegister(CODE.get(i).ASSIGN, CODE.get(i).Life_IN, CODE.get(i).Next_IN, true);
+
             m_writer.println(CODE.get(i));
         }
     }
