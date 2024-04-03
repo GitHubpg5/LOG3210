@@ -199,15 +199,28 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
             return "R" + REGISTERS.indexOf(variable);
         if(REGISTERS.size() < MAX_REGISTERS_COUNT){
             REGISTERS.add(variable);
+            if(loadIfNotFound) m_writer.println("LD " + "R" + (REGISTERS.size()-1 )+ ", " + variable);
             return "R" + REGISTERS.indexOf(variable);
         }
         if(REGISTERS.size() == MAX_REGISTERS_COUNT){
-            int maxNextUse = -1;
-            int replacementKey = -1;
-            for(int i = 0; i < life.size(); i++)
+            String replacedVar = "";
+            int maxVal = 0;
+            for(String var: REGISTERS)
             {
-
+                if(!next.nextUse.containsKey(var))
+                {
+                    replacedVar = var;
+                    break;
+                }
+                for (int val : next.nextUse.get(var)) {
+                    if (val > maxVal) {
+                        maxVal = val;
+                        replacedVar = var;
+                    }
+                }
             }
+            if(loadIfNotFound) m_writer.println("LD " + "R" + REGISTERS.indexOf(replacedVar)+ ", " + variable);
+            return "R" + REGISTERS.indexOf(replacedVar);
         }
 
         // Le dernier cas est si le Register depasse le maximum pour une raison quelconque.
@@ -222,10 +235,11 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
         // You should change the code below.
         for (int i = 0; i < CODE.size(); i++) {
             m_writer.println("// Step " + i);
-            String assignation = chooseRegister(CODE.get(i).ASSIGN, CODE.get(i).Life_OUT, CODE.get(i).Next_IN, false);
-            String gauche = chooseRegister(CODE.get(i).ASSIGN, CODE.get(i).Life_IN, CODE.get(i).Next_IN, true);
-            String droite = chooseRegister(CODE.get(i).ASSIGN, CODE.get(i).Life_IN, CODE.get(i).Next_IN, true);
+            String gauche = chooseRegister(CODE.get(i).LEFT, CODE.get(i).Life_IN, CODE.get(i).Next_IN, true);
+            String droite = chooseRegister(CODE.get(i).RIGHT, CODE.get(i).Life_IN, CODE.get(i).Next_IN, true);
+            String assignation = chooseRegister(CODE.get(i).ASSIGN, CODE.get(i).Life_OUT, CODE.get(i).Next_OUT, false);
 
+            m_writer.println(CODE.get(i).OPERATION + " " + assignation + ", " + gauche + ", " + droite);
             m_writer.println(CODE.get(i));
         }
     }
