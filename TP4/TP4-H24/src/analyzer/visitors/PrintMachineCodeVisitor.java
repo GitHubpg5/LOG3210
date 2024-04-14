@@ -111,8 +111,7 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
 
         String assignation = (String) node.jjtGetChild(0).jjtAccept(this, null);
         String droite = (String) node.jjtGetChild(1).jjtAccept(this, null);
-
-        MachineCodeLine machineCodeLine = new MachineCodeLine("uh", assignation, "#0", droite);
+        MachineCodeLine machineCodeLine = new MachineCodeLine("+", assignation, "#0", droite);
         CODE.add(machineCodeLine);
         return null;
     }
@@ -200,27 +199,35 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
         if(REGISTERS.size() < MAX_REGISTERS_COUNT){
             REGISTERS.add(variable);
             if(loadIfNotFound) m_writer.println("LD " + "R" + (REGISTERS.size()-1 )+ ", " + variable);
-            return "R" + REGISTERS.indexOf(variable);
+            return "R" + REGISTERS.indexOf(variable); // ERROR TBK
         }
         if(REGISTERS.size() == MAX_REGISTERS_COUNT){
             String replacedVar = "";
             int maxVal = 0;
-            for(String var: REGISTERS)
-            {
-                if(!next.nextUse.containsKey(var))
-                {
+            for(String var: REGISTERS) {
+                if (!next.nextUse.containsKey(var)) {
                     replacedVar = var;
                     break;
                 }
-                for (int val : next.nextUse.get(var)) {
+
+                if (next.nextUse.get(var).size() == 1) {
+                    int val = next.nextUse.get(var).get(0);
                     if (val > maxVal) {
                         maxVal = val;
                         replacedVar = var;
                     }
                 }
             }
+
+            int regIndex = REGISTERS.indexOf(replacedVar);
+            if (MODIFIED.indexOf(replacedVar) > -1 && life.contains(replacedVar))
+            {
+                m_writer.println("ST " + replacedVar + ", R" + regIndex);
+            }
             if(loadIfNotFound) m_writer.println("LD " + "R" + REGISTERS.indexOf(replacedVar)+ ", " + variable);
-            return "R" + REGISTERS.indexOf(replacedVar);
+
+            if (replacedVar != "") REGISTERS.set(regIndex, variable);
+            return "R" + regIndex;
         }
 
         // Le dernier cas est si le Register depasse le maximum pour une raison quelconque.
@@ -235,12 +242,25 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
         // You should change the code below.
         for (int i = 0; i < CODE.size(); i++) {
             m_writer.println("// Step " + i);
+            if (i == 4) {
+                System.out.println("lol");
+            }
             String gauche = chooseRegister(CODE.get(i).LEFT, CODE.get(i).Life_IN, CODE.get(i).Next_IN, true);
             String droite = chooseRegister(CODE.get(i).RIGHT, CODE.get(i).Life_IN, CODE.get(i).Next_IN, true);
             String assignation = chooseRegister(CODE.get(i).ASSIGN, CODE.get(i).Life_OUT, CODE.get(i).Next_OUT, false);
-
-            m_writer.println(CODE.get(i).OPERATION + " " + assignation + ", " + gauche + ", " + droite);
+            MODIFIED.add(CODE.get(i).ASSIGN);
+            if (!(assignation.equals(droite) && gauche.charAt(0) == '#')) m_writer.println(CODE.get(i).OPERATION + " " + assignation + ", " + gauche + ", " + droite);
             m_writer.println(CODE.get(i));
+        }
+
+//        for (String returns: RETURNS) {
+//            if (REGISTERS.indexOf(returns) > -1 && MODIFIED.indexOf(returns) > -1)
+//                m_writer.println("ST " + returns + " , R" + REGISTERS.indexOf(returns));
+//        }
+
+        for(String var: REGISTERS) {
+            if (RETURNS.indexOf(var) > -1 && MODIFIED.indexOf(var) > -1)
+                m_writer.println("ST " + var + ", R" + REGISTERS.indexOf(var));
         }
     }
 
