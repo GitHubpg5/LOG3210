@@ -135,27 +135,18 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
         // TODO (ex2): Implement life variables algorithm on the CODE array.
         for (int i = 0; i < CODE.size(); i++)
         {
-//            IN[CODE.get(i)] = {};
             CODE.get(i).Life_IN.clear();
-
-//            OUT[CODE.get(i)] = {};
             CODE.get(i).Life_OUT.clear();
         }
-//        OUT[CODE.size()-1] = Returned_Values;
         CODE.get(CODE.size()-1).Life_OUT = new HashSet<>(RETURNS);
         for (int i = CODE.size()-1; i >= 0; i--) {
             if (i < (CODE.size() - 1)) {
-//                OUT[CODE.get(i)] = IN[CODE.get(i + 1)];
                 CODE.get(i).Life_OUT = CODE.get(i+1).Life_IN;
             }
             HashSet<String> temp = new HashSet<>(CODE.get(i).Life_OUT);
-            // (OUT[nodeList[i]] - DEF[nodeList[i]]
             temp.removeAll(CODE.get(i).DEF);
-            // union REF[nodeList[i]]
             temp.addAll(CODE.get(i).REF);
-            // IN[nodeList[i]] =
             CODE.get(i).Life_IN = temp;
-            //System.out.println(CODE.get(i).Life_IN);
         }
     }
 
@@ -177,7 +168,6 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
                     CODE.get(finalI).Next_IN.nextUse.put(v, (ArrayList<Integer>) n.clone()) ;
                 }});
             CODE.get(i).REF.forEach((ref) -> CODE.get(finalI).Next_IN.add(ref, finalI));
-            System.out.println(CODE.get(i).REF);
         }
     }
 
@@ -199,7 +189,7 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
         if(REGISTERS.size() < MAX_REGISTERS_COUNT){
             REGISTERS.add(variable);
             if(loadIfNotFound) m_writer.println("LD " + "R" + (REGISTERS.size()-1 )+ ", " + variable);
-            return "R" + REGISTERS.indexOf(variable); // ERROR TBK
+            return "R" + REGISTERS.indexOf(variable);
         }
         if(REGISTERS.size() == MAX_REGISTERS_COUNT){
             String replacedVar = "";
@@ -209,7 +199,6 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
                     replacedVar = var;
                     break;
                 }
-
                 if (next.nextUse.get(var).size() == 1) {
                     int val = next.nextUse.get(var).get(0);
                     if (val > maxVal) {
@@ -218,18 +207,15 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
                     }
                 }
             }
-
             int regIndex = REGISTERS.indexOf(replacedVar);
             if (MODIFIED.indexOf(replacedVar) > -1 && life.contains(replacedVar))
             {
                 m_writer.println("ST " + replacedVar + ", R" + regIndex);
             }
             if(loadIfNotFound) m_writer.println("LD " + "R" + REGISTERS.indexOf(replacedVar)+ ", " + variable);
-
             if (replacedVar != "") REGISTERS.set(regIndex, variable);
             return "R" + regIndex;
         }
-
         // Le dernier cas est si le Register depasse le maximum pour une raison quelconque.
         return null;
     }
@@ -242,9 +228,6 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
         // You should change the code below.
         for (int i = 0; i < CODE.size(); i++) {
             m_writer.println("// Step " + i);
-            if (i == 4) {
-                System.out.println("lol");
-            }
             String gauche = chooseRegister(CODE.get(i).LEFT, CODE.get(i).Life_IN, CODE.get(i).Next_IN, true);
             String droite = chooseRegister(CODE.get(i).RIGHT, CODE.get(i).Life_IN, CODE.get(i).Next_IN, true);
             String assignation = chooseRegister(CODE.get(i).ASSIGN, CODE.get(i).Life_OUT, CODE.get(i).Next_OUT, false);
@@ -252,12 +235,6 @@ public class PrintMachineCodeVisitor implements ParserVisitor {
             if (!(assignation.equals(droite) && gauche.charAt(0) == '#')) m_writer.println(CODE.get(i).OPERATION + " " + assignation + ", " + gauche + ", " + droite);
             m_writer.println(CODE.get(i));
         }
-
-//        for (String returns: RETURNS) {
-//            if (REGISTERS.indexOf(returns) > -1 && MODIFIED.indexOf(returns) > -1)
-//                m_writer.println("ST " + returns + " , R" + REGISTERS.indexOf(returns));
-//        }
-
         for(String var: REGISTERS) {
             if (RETURNS.indexOf(var) > -1 && MODIFIED.indexOf(var) > -1)
                 m_writer.println("ST " + var + ", R" + REGISTERS.indexOf(var));
